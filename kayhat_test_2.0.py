@@ -92,12 +92,12 @@ def gap_categories(row):
 
 def date_changing(row):
     return datetime.strptime(pd.to_datetime(int(row["date"]),unit='s').strftime("%Y-%m-%d"),'%Y-%m-%d')
-def feature_engineering(df_total):#like I mantioned I had problems with the date
+def feature_engineering(df_total):
     df_total["gap"]=df_total["high"]-df_total["low"]
     df_total["gap_categories"]=df_total.apply(gap_categories,axis=1)
     df_total["date"]=df_total.apply(date_changing,axis=1)
     df_total=df_total.sort_values(by="date",ignore_index=True)
-    #################################################aggergate 3 close days and claulate their avg and std
+    #################################################aggergate 3 close days and calculate their avg and std
     df_total2=df_total[["date","gap"]]
     df_total2=df_total2.groupby(pd.Grouper(key='date',axis=0,freq='3D',sort=True)).std()
     df_total2=df_total2.reset_index().rename(columns={"gap":"gap_std"})
